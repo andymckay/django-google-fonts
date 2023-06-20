@@ -62,7 +62,7 @@ Google fonts normally have title cased names, with capitalized first names [^1].
 
 [^1]: Font's like `IBM Plex Sans` have more capital letters than just the first letter.
 
-If you are unsure you can get at the fonts easily, for example:
+If you are unsure you can get at the fonts programatically, for example:
 
 ```python
 >>> from django.apps import apps
