@@ -1,6 +1,6 @@
-`django-google-fonts` lets you use Google fonts in Django easily, with caching of the font files locally. 
+`django-google-fonts` lets you use Google fonts in Django easily, by downloading, rewriting and caching the font and CSS files locally. 
 
-This means that you can have all the benefits of using Google Fonts, but with added privacy and security for your users, because all the requests for the fonts will be on the same domain and not hitting Google servers.
+This means that you can have all the benefits of using Google Fonts, but with added privacy and security for your users, because all the requests for the fonts will can now be on the same domain and not hitting Google servers.
 
 ### Installing
 
