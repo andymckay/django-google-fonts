@@ -1,6 +1,8 @@
-`django-google-fonts` lets you use Google fonts in Django easily, with caching of the font files locally. 
+`django-google-fonts` lets you use Google fonts in Django easily, by downloading, rewriting and caching the font and CSS files locally. 
 
-This means that you can have all the benefits of using Google Fonts, but with added privacy and security for your users, because all the requests for the fonts will be on the same domain and not hitting Google servers.
+This means that you can have all the benefits of using Google Fonts, but with added privacy and security and speed for your users, because all the requests for the fonts will be on your domain and not hitting Google servers.
+
+When the server restarts it will check if any fonts are missing locally and load them if they are. So there is no impact or performance considerations. After that initial download of the fonts, `django-google-fonts` does not need to make any more requests to Google servers, working totally offline from the Google servers.
 
 ### Installing
 
@@ -19,13 +21,6 @@ INSTALLED_APPS = [
 
 ### Using
 
-Tell Django where to store the font files, usually this will be somewhere inside your `STATIC_DIRS` for example:
-
-```python
-GOOGLE_FONTS_DEST = BASE_DIR / "static" / "fonts"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-```
-
 Tell Django which fonts you'd like:
 
 ```python
@@ -43,11 +38,26 @@ When Django starts it will grab the fonts from Google and store them in the `GOO
 </style>
 ```
 
-There is also an optional `font` tag that will return the CSS:
+There is also a `font` tag that will return the raw CSS:
 
 ```html
     {% load google_fonts %}
-    {% font "Pathway Extreme" %}
+    {% font_css "Pathway Extreme" %}
+```
+
+#### Optional settings
+
+By default `django-google-fonts` will store fonts in the first directory specified in `STATICFILES_DIRS`. That might not be where you want, so you can set a `GOOGLE_FONTS_DIR` setting if you'd like it be somewhere else:
+
+```python
+GOOGLE_FONT_DIR = BASE_DIR / "fonts"
+STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "fonts"]
+```
+
+The CSS file contains the path to the font and `django-google-fonts` tries to calculate what the path to the font should be by using the value of `STATIC_URL`. If that's wrong and you need it be something else, you can set that value:
+
+```python
+GOOGLE_FONT_URL = "my-exotic-static/url/to-the-fonts"
 ```
 
 ### Names
