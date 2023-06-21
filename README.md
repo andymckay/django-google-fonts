@@ -1,5 +1,5 @@
 `django-google-fonts` lets you use Google fonts in Django easily, by downloading, rewriting and caching the font and CSS files locally. 
-
+README.md
 This means that you can have all the benefits of using Google Fonts, but with added privacy, security and speed for your users, because all the requests for the fonts will be on your domain and not hitting Google servers.
 
 When the server restarts it will check if any fonts are missing locally and load them if they are. So there is no impact or performance considerations. After that initial download of the fonts, `django-google-fonts` does not need to make any more requests to Google servers, working totally offline from the Google servers.
@@ -27,7 +27,7 @@ Tell Django which fonts you'd like:
 GOOGLE_FONTS = ["Kablammo", "Roboto"]
 ```
 
-When Django starts it will grab the fonts from Google and store them in the `GOOGLE_FONTS_DEST`. It will rewrite the CSS that Google Fonts provides, so all you have to do is load the font like normal. For example:
+When Django starts it will grab the fonts from Google and store them in your `STATICFILES_DIRS` directory. It will rewrite the CSS that Google Fonts provides, so all you have to do is load the font like normal. For example:
 
 ```html
 <link rel="stylesheet" href="{% static 'fonts/pathwayextreme.css' %}">
