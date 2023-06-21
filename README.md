@@ -15,7 +15,7 @@ Then add to your Django settings file:
 ```python
 INSTALLED_APPS = [
     ...
-    `django_google_fonts`
+    'django_google_fonts'
 ]
 ```
 
