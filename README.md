@@ -1,6 +1,6 @@
 `django-google-fonts` lets you use Google fonts in Django easily, by downloading, rewriting and caching the font and CSS files locally. 
 
-This means that you can have all the benefits of using Google Fonts, but with added privacy and security and speed for your users, because all the requests for the fonts will be on your domain and not hitting Google servers.
+This means that you can have all the benefits of using Google Fonts, but with added privacy, security and speed for your users, because all the requests for the fonts will be on your domain and not hitting Google servers.
 
 When the server restarts it will check if any fonts are missing locally and load them if they are. So there is no impact or performance considerations. After that initial download of the fonts, `django-google-fonts` does not need to make any more requests to Google servers, working totally offline from the Google servers.
 
@@ -71,3 +71,14 @@ Google fonts normally have title cased names, with capitalized first names [^1].
 |Static tag|`pathwayextreme`|
 
 [^1]: Font's like `IBM Plex Sans` have more capital letters than just the first letter.
+
+If you are unsure you can get at the fonts programatically, for example:
+
+```python
+>>> from django.apps import apps
+>>> for font in apps.get_app_config("django_google_fonts").fonts:
+...   print(font.name, font.slug, font.dest)
+...
+Kablammo kablammo /Users/a/c/examplefonts/static/fonts/kablammo
+Roboto roboto /Users/a/c/examplefonts/static/fonts/roboto
+```
