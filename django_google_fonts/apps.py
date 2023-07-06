@@ -16,7 +16,7 @@ user_agent = getattr(
     "GOOGLE_FONTS_USER_AGENT",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
 )
-css_url = "https://fonts.googleapis.com/css"
+css_url = "https://fonts.googleapis.com/css2"
 css_prefix = "https://fonts.gstatic.com/s/"
 log_prefix = "django_google_fonts"
 # Requests timeout in seconds.

@@ -45,6 +45,28 @@ There is also a `font` tag that will return the raw CSS:
     {% font_css "Pathway Extreme" %}
 ```
 
+Custom font weights are available by specifying the font weights in the URL. The easy way to do this is visit a font page, for example [Robot](https://fonts.google.com/specimen/Roboto) and then selecting the weights and styles you'd like. Then click on `Selected Families` and copy the font definition in.
+
+For example Google will suggest embedding the font using this URL:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,700;0,900;1,700&display=swap" rel="stylesheet">
+```
+
+Roboto with italic in weights 100, 700, 900. To use this in Django you would specify:
+
+```python
+GOOGLE_FONTS = ["Roboto:ital,wght@0,100;0,700;1,700"]
+```
+
+And you would reference it in a stylesheet:
+
+```html
+<link rel="stylesheet" href="{% static 'fonts/roboto:ital,wght@0,100;0,700;1,700.css' %}">
+```
+
 #### Optional settings
 
 By default `django-google-fonts` will store fonts in the first directory specified in `STATICFILES_DIRS`. That might not be where you want, so you can set a `GOOGLE_FONTS_DIR` setting if you'd like it be somewhere else:
