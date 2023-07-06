@@ -50,14 +50,14 @@ There is also a `font` tag that will return the raw CSS:
 By default `django-google-fonts` will store fonts in the first directory specified in `STATICFILES_DIRS`. That might not be where you want, so you can set a `GOOGLE_FONTS_DIR` setting if you'd like it be somewhere else:
 
 ```python
-GOOGLE_FONT_DIR = BASE_DIR / "fonts"
+GOOGLE_FONTS_DIR = BASE_DIR / "fonts"
 STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "fonts"]
 ```
 
 The CSS file contains the path to the font and `django-google-fonts` tries to calculate what the path to the font should be by using the value of `STATIC_URL`. If that's wrong and you need it be something else, you can set that value:
 
 ```python
-GOOGLE_FONT_URL = "my-exotic-static/url/to-the-fonts"
+GOOGLE_FONTS_URL = "my-exotic-static/url/to-the-fonts"
 ```
 
 ### Names
