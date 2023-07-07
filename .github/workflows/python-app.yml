@@ -21,6 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install .
+        pip install django
     - name: Test
       run: |
         cd django_google_fonts
