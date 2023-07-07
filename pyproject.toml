@@ -10,7 +10,7 @@ line-length = 100
 
 [project]
 name = "django_google_fonts"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Andy McKay", email="andy@mckay.pub" },
 ]
