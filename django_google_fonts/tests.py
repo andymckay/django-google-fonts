@@ -1,16 +1,28 @@
 import os
 import tempfile
+import unittest 
+
 from unittest.mock import ANY, patch
 
 from django.conf import settings
 from django.test import TestCase
 
-from .apps import DjangoGoogleFontsConfig, Font
-
-
 class Stub(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+
+import django
+settings.configure(Stub(
+    DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}},
+    DEBUG=False,
+    FORCE_SCRIPT_NAME=None,
+    INSTALLED_APPS=['django_google_fonts'],
+    LOGGING=None,
+    LOGGING_CONFIG=None,
+    STATIC_URL='/static/',
+))
+
+from apps import DjangoGoogleFontsConfig, Font
 
 
 roboto_css = """/* cyrillic-ext */
@@ -24,7 +36,7 @@ roboto_css = """/* cyrillic-ext */
 """
 
 get_mock_params = {"params": {"family": "Roboto"}, "headers": {"User-Agent": ANY}, "timeout": 10}
-get_mock_url = "https://fonts.googleapis.com/css"
+get_mock_url = "https://fonts.googleapis.com/css2"
 
 
 class TestFont(TestCase):
@@ -33,7 +45,11 @@ class TestFont(TestCase):
         self.tempdir_path = self.tempdir.name
         self.font = Font("Roboto", self.tempdir_path)
 
-    @patch("django_google_fonts.apps.requests")
+    def tearDown(self):
+        self.tempdir.cleanup()
+        return super().tearDown()
+
+    @patch("apps.requests")
     def test_cache(self, mock_requests):
         mock_requests.get.return_value = Stub(status_code=200, content="".encode("utf-8"))
         self.font.get()
@@ -41,7 +57,7 @@ class TestFont(TestCase):
         self.font.get()
         mock_requests.get.assert_called_once_with(get_mock_url, **get_mock_params)
 
-    @patch("django_google_fonts.apps.requests")
+    @patch("apps.requests")
     def test_rewrites(self, mock_requests):
         mock_requests.get.return_value = Stub(status_code=200, content=roboto_css.encode("utf-8"))
         self.font.get()
@@ -52,7 +68,7 @@ class TestFont(TestCase):
             "https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu72xKKTU1Kvnz.woff2", timeout=10
         )
 
-    @patch("django_google_fonts.apps.requests")
+    @patch("apps.requests")
     def test_uses_google_fonts_url(self, mock_requests):
         mock_requests.get.return_value = Stub(status_code=200, content=roboto_css.encode("utf-8"))
         with self.settings(GOOGLE_FONTS_URL="blah/"):
@@ -71,7 +87,11 @@ class TestDjangoGoogleFontsConfig(TestCase):
         )
         super().setUp()
 
-    @patch("django_google_fonts.apps.requests")
+    def tearDown(self):
+        self.tempdir.cleanup()
+        return super().tearDown()
+
+    @patch("apps.requests")
     def test_good_path(self, mock_requests):
         with self.settings(
             GOOGLE_FONTS=["Roboto"],
@@ -127,3 +147,6 @@ class TestDjangoGoogleFontsConfig(TestCase):
             mock_requests.get.return_value = Stub(status_code=200, content="".encode("utf-8"))
             res = self.obj.ready()
             self.assertEqual(res, True)
+
+if __name__ == '__main__':
+    unittest.main()
