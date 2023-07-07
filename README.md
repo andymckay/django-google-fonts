@@ -1,3 +1,5 @@
+[![Python application](https://github.com/andymckay/django-google-fonts/actions/workflows/python-app.yml/badge.svg)](https://github.com/andymckay/django-google-fonts/actions/workflows/python-app.yml)
+ 
 `django-google-fonts` lets you use Google fonts in Django easily, by downloading, rewriting and caching the font and CSS files locally. 
 README.md
 This means that you can have all the benefits of using Google Fonts, but with added privacy, security and speed for your users, because all the requests for the fonts will be on your domain and not hitting Google servers.
