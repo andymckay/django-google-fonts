@@ -1,29 +1,32 @@
 import os
 import tempfile
-import unittest 
-
+import unittest
 from unittest.mock import ANY, patch
 
 from django.conf import settings
 from django.test import TestCase
 
+
 class Stub(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
+
 import django
-settings.configure(Stub(
-    DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}},
-    DEBUG=False,
-    FORCE_SCRIPT_NAME=None,
-    INSTALLED_APPS=['django_google_fonts'],
-    LOGGING=None,
-    LOGGING_CONFIG=None,
-    STATIC_URL='/static/',
-))
+
+settings.configure(
+    Stub(
+        DATABASES={"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}},
+        DEBUG=False,
+        FORCE_SCRIPT_NAME=None,
+        INSTALLED_APPS=["django_google_fonts"],
+        LOGGING=None,
+        LOGGING_CONFIG=None,
+        STATIC_URL="/static/",
+    )
+)
 
 from apps import DjangoGoogleFontsConfig, Font
-
 
 roboto_css = """/* cyrillic-ext */
 @font-face {
@@ -148,5 +151,6 @@ class TestDjangoGoogleFontsConfig(TestCase):
             res = self.obj.ready()
             self.assertEqual(res, True)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

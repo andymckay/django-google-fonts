@@ -26,3 +26,15 @@ def font_css(name):
                 return data
             except FileNotFoundError:
                 logger.error(f"{log_prefix}: Failed to get find css for font: {name}")
+
+
+@register.simple_tag
+def font_debug():
+    fonts = apps.get_app_config("django_google_fonts").fonts
+    metadata = []
+    for font in fonts:
+        metadata.append({"font": font.name, "metadata": font.metadata()})
+        if not metadata:
+            continue
+
+    return metadata
