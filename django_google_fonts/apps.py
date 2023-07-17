@@ -1,8 +1,11 @@
 import logging
 import os
 
+import hashlib
 import requests
 import tinycss2
+import json
+from tinycss2.ast import Comment
 from django.apps import AppConfig
 from django.conf import settings
 
@@ -19,19 +22,25 @@ user_agent = getattr(
 css_url = "https://fonts.googleapis.com/css2"
 css_prefix = "https://fonts.gstatic.com/s/"
 log_prefix = "django_google_fonts"
+json_prefix = "Django-Google-Font: "
 # Requests timeout in seconds.
 timeout = 10
 fonts = []
 
 
 class Font:
-    __slots__ = ["name", "dest", "slug", "dest_css"]
+    __slots__ = ["name", "dest", "slug", "dest_css", "rest"]
 
     def __init__(self, name, dest):
         self.name = name
-        self.slug = self.name.replace(" ", "").lower()
+        lowered = name.replace(" ", "").lower()
+        if ":" in lowered:
+            self.slug, rest = lowered.split(":")
+            self.rest = {"original": rest, "hash": hashlib.shake_256(rest.encode("utf-8")).hexdigest(8)}
+        else:
+            self.slug = lowered
+        self.dest_css = os.path.join(dest, f"{self.slug}-{self.rest['hash']}.css")
         self.dest = dest
-        self.dest_css = os.path.join(dest, self.slug + ".css")
 
     def cached(self):
         return os.path.exists(self.dest_css)
@@ -79,11 +88,20 @@ class Font:
                         with open(dest, "wb") as f:
                             f.write(res.content)
 
+                        # JSON inside CSS. It's the future.
+                        metadata = json.dumps({
+                            "name": self.name,
+                            "slug": self.slug,
+                            "rest": self.rest
+                        })
+                        comment = Comment(0, 0, f"{json_prefix}{metadata}")
+
                         # STATIC_URL must have a trailing slash.
                         path = getattr(settings, "GOOGLE_FONTS_URL", f"{settings.STATIC_URL}fonts/")
                         line.representation = line.representation.replace(
                             "https://fonts.gstatic.com/s/", path
                         )
+                        output_css.insert(0, comment)
                         output_css.append(rule)
 
         with open(self.dest_css, "w", encoding="utf-8") as f:
@@ -131,3 +149,14 @@ class DjangoGoogleFontsConfig(AppConfig):
             self.fonts.append(font)
 
         return True
+
+    def iterate(self):
+        for font in self.fonts:
+            with open(font.dest_css, "r", encoding="utf-8") as f:
+                parsed = tinycss2.parse_stylesheet(f.read())
+                first = parsed[0]
+                if first.type == "comment" and \
+                    first.value.startswith(json_prefix):
+                    data = first.value.split(json_prefix)[1]
+                    metadata = json.loads(data)
+                    yield metadata
